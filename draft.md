@@ -4,12 +4,12 @@ Teorie her se zabývá formálním pohledem na hry a hráče modelované strateg
 
 Popsat normal-form game, utility, hra s úplnou/neúplnou informací, zero-sum? 
 
-## Terminologie
+## Terminologie (většina terminologie ze skript https://kam.mff.cuni.cz/~balko/ath2324/main.pdf)
 
 Hra v normální formě je trojice $(P, A, u)$, kde 
 * $P$ je konečná množina $n$ hráčů,
 * $A_i$ je množina akcí hráče $i \in P$,
-* $A = A_1 \times ... \times A_n$,
+* $A = A_1 \times ... \times A_n$ je profil akcí,
 * $u_i: A_i \to \mathbb{R}$ je funkce odměn (utility/payoff function) pro hráče $i \in P$,
 * $u = (u_i, ..., u_n)$.
 
@@ -25,13 +25,13 @@ Hra s nulovým součtem je hra dvou hráčů, kde pro každou dvojici akcí $a=(
 
 ## Best response
 
-Nejlepší odpověď hráče $i$ na profil strategií $s_{-i}$ je smíšená strategie $s_{i}^{*}$ taková, že $\forall s_{i}' \in S_{i}: u_i(s_{i}^{*}, s_{-i}) >= u_i(s_{i}', s_{-i})$.
+Nejlepší odpověď hráče $i$ na profil strategií $s_{-i}$ je smíšená strategie $s_{i}^{*}$ taková, že $\forall s_{i}' \in S_{i}: u_i(s_{i}^{*}, s_{-i}) \geq u_i(s_{i}', s_{-i})$.
 
-## Nash Equilibrium?
+## Nash Equilibrium
 
 Pro hru v normálním tvaru $G = (P, A, u)$ $n$ hráčů, Nashovo equilibrium v $G$ je profil strategií $s$ takový, že $\forall i \in P: s_i$ je nejlepší odpověd na $s_{-i}$. Slovně řečeno, žádný racionální hráč (sám o sobě) nechce změnit strategii - ve smyslu, že si jinou strategií nemůže pomoct, pokud ostatní budou stále hrát tu svojí. Podle Nashovo věty má každá hra v normální formě Nashovo equilibrium.  
 
-## Minimax/Maximin?
+## Minimax/Maximin
 
 ### Minimax
 
@@ -48,13 +48,17 @@ $max_{s_{i}}min_{s_{-i}}u_i(s_i, s_{-i}) = min_{s_{-i}}max_{s_{i}} u_i(s_i, s_{-
 Tato věta v nějakém smyslu vlastně řeší hry s nulovým součtem. Vychází z ní také, že Nashova equilibria v hrách s nulovým součtem se dají dobře počítat. Také existuje hodnota $v = max_{s_{i}}min_{s_{-i}}u_i(s_i, s_{-i})$, tzv. hodnota hry $G$.
 
 
-## Alfabeta prořezávání?
+## Alfabeta prořezávání
 
-Hry s nulovým součtem se dají například reprezentovat stromem hry (game tree).
+Hry s nulovým součtem se dají například reprezentovat stromem hry (game tree). Hráči se střídají po vrstvách stromu. Každý vrchol má tolik potomků, kolik daný hráč má akcí. Listy jsou ohodnocené ziskem pro daného hráče (zero-sum => ztráta pro druhého hráče). Pro vyhodnocení je potřeba projít každý vrchol ve stromě a rozhodnout se pro daného hráče, jaká akce bude nejlepší. Jelikož jde o hru s nulovým součtem, jeden hráč minimalizuje a druhý maximalizuje. Pomocí alfa-beta prořezávání se některé podstromy dají vynechat, když nemůžou vrátit lepší výsledek než jiný podstrom. 
+
+Potřeba lépe pochopit a vysvětlit.
 
 Hlavně obrázek.
 
 ## ML, NN?
+
+
 
 # AI
 
