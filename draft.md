@@ -62,6 +62,11 @@ $(s_i, s_{-i})$ NE $: \forall s_{i}', s_{-i}': u_i(s_i, s_{-i}') + u_{-i}(s_i', 
 neboli při použití optimální strategie nemůže hráč prohrát, maximálně remizovat při hře proti optimálnímu hráči.
 (Schmid)
 
+## Regret
+TODO:
+Učení se si můžeme představit jako opakované hraní hry proti protihráči/prostředí. Mějme akce $X = \{1, ..., N\}$ a hráč $A$. V každém čase $t$ si hráč zvolí pravděpodobnostní distribuci přes akce $p^t = (p_1^t, ..., p_N^t)$, tj. $\forall x \in X: p_x^t \geq 0$, $\sum_{x \in X} p_x^t = 1$. 
+
+(Schmid)
 
 
 ## Alfabeta prořezávání
@@ -122,11 +127,11 @@ Hrát moc předvídatelně je problém - protivník může jednoduše odhadnout 
 
 #### Regret matching
 
-V iteraci T ve stavu s si hráč vypočítá regret pro každou nezahranou akci a: r(s, a) = v(s, a) - suma přes akce b v(s, b)*pr(s, b), kde v(s, a) je hodnota akce a ve stavu s (counter-factual value). Přes všechny iterace t = 0, ..., T si ukládá vypočítané regrety do R(s, a). V další iteraci bude zvolená strategie ve stavu s jako: pr(s, a) = R(s, a) / suma přes akce b R(s, b), kde záporné členy jsou nahrezeny 0, případně pr uniformní strategií.
+V iteraci T ve stavu s si hráč vypočítá regret pro každou nezahranou akci a: r(s, a) = v(s, a) - suma přes akce b v(s, b)*pr(s, b), kde v(s, a) je hodnota akce a ve stavu s (counter-factual value). Přes všechny iterace t = 0, ..., T si ukládá vypočítané regrety do R(s, a). V další iteraci bude zvolená strategie ve stavu s jako: $Pr(s, a) = R(s, a) / \sum_{b \in A} R(s, b)$, kde záporné členy jsou nahrezeny 0, případně pr uniformní strategií.
 
 #### Regret matching+
 
-Místo ukládání součtů regretů do R je zvolený trochu jiný přístup: $Q^t(s, a) = max(0, Q^{t-1}(s, a) + r^t(s, a))$ a $pr(s, a) = Q^t(s, a)/suma přes b Q^t(s, b)$
+Místo ukládání součtů regretů do R je zvolený trochu jiný přístup: $Q^t(s, a) = max(0, Q^{t-1}(s, a) + r^t(s, a))$ a $Pr(s, a) = Q^t(s, a)/\sum_{b \in A} Q^t(s, b)$
 
 #### GT-CFR
 
@@ -142,11 +147,11 @@ Na listových vrcholech se na hodnoty hry dotazuje neuronové sítě.
 
 Data pro trénování neuronové sítě se sbírají při self-play (z trajektorie i při prohledávání stromu akcí ve stavu). V trajektorii se procházené dotazy na neuronovou síť ukládají a solver je prozkoumá podrobněji, případně i rekurzivně přidá další dotazy na vyřešení. Z dotazů a jejich řešení se aktualizuje síť. Řešení dotazů je vlastně řešení "podher" - pomocí GT-CFR (díky tomu rekurzivně vytváří další dotazy - pouze s malou pravděpodobností 0.1 nebo 0.2). Zlepšení sítě se propaguje zespod - nejdříve díky "podhrám" těsně nad listy.
 
-### Výsledky?
-
 # Fantom staré Prahy
 
 ## Pravidla (jak moc můžu přímo citovat z pravidel?)
+
+Popis záměrně postrádá některá pravidla, která jsou vynechaná z mé implementace hry.
 
 ### Mapa
 
@@ -171,6 +176,8 @@ Před zahájením hry, rozmístí detektivové své figurky na hrací pole. Pot�
 Hra končí výhrou pro detektivy, pokud dorazí jakýkoli detektiv na vrchol obsazený Fantomem. Případně kdyby Fantom neměl dostatek žetonů na pohyb z jeho pozice. Naopak Fantom vyhrává, vydrží-li celých 24 tahů nedopaden. Případně kdyby se ani jeden detektiv nemohl pohybovat.
 
 ## Informace kolem? (vznik, existují AI)
+
+Hra je inspirovaná původně Britskou hrou Scotland Yard z roku 1983 vyskytující se v Londýně. Jako příklad umělé inteligence je Player of Games.
 
 # Moje hra (jak moc popisovat?)
 
