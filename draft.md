@@ -48,6 +48,22 @@ $max_{s_{i}}min_{s_{-i}}u_i(s_i, s_{-i}) = min_{s_{-i}}max_{s_{i}} u_i(s_i, s_{-
 Tato věta v nějakém smyslu vlastně řeší hry s nulovým součtem. Vychází z ní také, že Nashova equilibria v hrách s nulovým součtem se dají dobře počítat. Také existuje hodnota $v = max_{s_{i}}min_{s_{-i}}u_i(s_i, s_{-i})$, tzv. hodnota hry $G$.
 
 
+## Využití
+
+Nashovo ekvilibrium i Maximin jsou pro hry s nulovým součtem dvou hráčů zajímavé, protože:
+
+$(s_1, s_2)$ je NE <=> $s_1 \in MAXIMIN_1 \land s_2 \in MAXIMIN_2$  
+(Schmid) 
+
+Pro hru s nulovým součtem dvou hráčů má využití optimální strategie dobré důvody. Z rovnosti Maximin a Minimax vyplývá:  
+
+$(s_i, s_{-i})$ NE $: \forall s_{i}', s_{-i}': u_i(s_i, s_{-i}') + u_{-i}(s_i', s_{-i}) \geq 0$,  
+
+neboli při použití optimální strategie nemůže hráč prohrát, maximálně remizovat při hře proti optimálnímu hráči.
+(Schmid)
+
+
+
 ## Alfabeta prořezávání
 
 Hry s nulovým součtem se dají například reprezentovat stromem hry (game tree). Hráči se střídají po vrstvách stromu. Každý vrchol má tolik potomků, kolik daný hráč má akcí. Listy jsou ohodnocené ziskem pro daného hráče (zero-sum => ztráta pro druhého hráče). Pro vyhodnocení je potřeba projít každý vrchol ve stromě a rozhodnout se pro daného hráče, jaká akce bude nejlepší. Jelikož jde o hru s nulovým součtem, jeden hráč minimalizuje a druhý maximalizuje. Pomocí alfa-beta prořezávání se některé podstromy dají vynechat, když nemůžou vrátit lepší výsledek než jiný podstrom. 
@@ -59,6 +75,11 @@ Hlavně obrázek.
 ## ML, NN?
 
 Strojové učení je podoblast umělé inteligence. Zaměřuje se na algoritmy a techniky "učení" - ve smyslu vylepšování schopnosti predikování/uzpůsobování se prostředí.  
+
+## Podhra
+
+
+
 
 # AI
 
@@ -125,7 +146,29 @@ Data pro trénování neuronové sítě se sbírají při self-play (z trajektor
 
 # Fantom staré Prahy
 
-## Pravidla
+## Pravidla (jak moc můžu přímo citovat z pravidel?)
+
+### Mapa
+
+Herní plocha je graf plný lokací (očíslované vrcholy) spojovaných dopravními linkami (hrany). Dopravní linky mají různé barvy podle typu: černá barva pro drožku, zelená pro taxi a červená pro tramvaj. Vrcholy jsou pak obarvené podle dopravních prostředků, které v nich mají zastávku.  
+
+### Příprava hry
+
+Jeden hráč je Fantom a zbylí hráči jsou detektivové (obyčejně 5). Každý hráč dostane herní žetony, které může proměnit za posunutí pomocí daného dopravního prostředku o jednu stanici. Pro každý typ prostředku jsou různé žetony. 
+
+### Tah
+
+Ve svém tahu se hráč rozhodne, jaký dostpuný dopravní prostředek chce využít - musí mít daný žeton a musí stát na vrcholu, kterému náleží správná linka (hrana). Může se daným dopravním prostředkem posunout na nejblížší vrchol po správně barevné cestě a žeton odevzdá. Po přesunutí tah hráče končí. Na každém vrcholu smí být maximálně jeden hráč. Hráč se nemůže zříci svého tahu.  
+
+Detektivové své žetony odevzdávají přímo Fantomovi. Stav žetonů detektivů je viditelný i pro Fantoma.
+
+### Začátek hry
+
+Před zahájením hry, rozmístí detektivové své figurky na hrací pole. Poté si už v prvním kole vybere svou pozici Fantom, ale není detektivům viditelný. Nyní se budou střídat v hraní detektivové a Fantom. Hra trvá dohromady maximálně 24 kol. V několika předem určených kolech se Fantom musí na mapě ukázat, a to v kolech 3, 8, 13, 18 a 24.
+
+### Konec hry
+
+Hra končí výhrou pro detektivy, pokud dorazí jakýkoli detektiv na vrchol obsazený Fantomem. Případně kdyby Fantom neměl dostatek žetonů na pohyb z jeho pozice. Naopak Fantom vyhrává, vydrží-li celých 24 tahů nedopaden. Případně kdyby se ani jeden detektiv nemohl pohybovat.
 
 ## Informace kolem? (vznik, existují AI)
 
@@ -147,7 +190,8 @@ Program pro simulování?
 
 
 
-
+Schmid
+https://dspace.cuni.cz/bitstream/handle/20.500.11956/173905/140094808.pdf?sequence=1&isAllowed=y
 
 https://www.fit.vut.cz/study/thesis/23706/
 https://is.muni.cz/th/or4dk/Implementacia_AI_do_hry_CatchThePhantom.pdf
