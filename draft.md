@@ -58,7 +58,7 @@ Hlavně obrázek.
 
 ## ML, NN?
 
-
+Strojové učení je podoblast umělé inteligence. Zaměřuje se na algoritmy a techniky "učení" - ve smyslu vylepšování schopnosti predikování/uzpůsobování se prostředí.  
 
 # AI
 
