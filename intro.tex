@@ -1,16 +1,38 @@
 
-\chapwithtoc{Introduction}
+\chapwithtoc{Úvod}
 
-Introduction should answer the following questions, ideally in this order:
-\begin{enumerate}
-\item What is the nature of the problem the thesis is addressing?
-\item What is the common approach for solving that problem now?
-\item How this thesis approaches the problem?
-\item What are the results? Did something improve?
-\item What can the reader expect in the individual chapters of the thesis?
-\end{enumerate}
+V roce 1997 poprvé dosáhla umělá inteligence DeepBlue II \cite{CAMPBELL200257} výhry proti velmistrovi a světovému šampionovi v šachách Garry Kasparovovi. O rok dříve prohrál DeepBlue I proti stejnému oponentovi. DeepBlue II byl postavený na velkém paralelismu. Každou vteřinu ohodnocoval a zkoumal miliony stavů. Oproti DeepBlue I měl také komplexnější ohodnovací funkci pro stavy hry.
 
-Expected length of the introduction is between 1--4 pages. Longer introductions may require sub-sectioning with appropriate headings --- use \texttt{\textbackslash{}section*} to avoid numbering (with section names like `Motivation' and `Related work'), but try to avoid lengthy discussion of anything specific. Any ``real science'' (definitions, theorems, methods, data) should go into other chapters.
-\todo{You may notice that this paragraph briefly shows different ``types'' of `quotes' in TeX, and the usage difference between a hyphen (-), en-dash (--) and em-dash (---).}
+Umělí hráči můžou využívat různých metod s různou úspěšností, velmi často mají v nějaké formě zakomponované prohledávání stavového stromu hry. Obecně není možné celý stavový prostor hry uložit do paměti, proto tzv. online algoritmy hledají strategii vždy jen pro aktuální stav. Kvůli velikosti se také využívá metod na zkrácení prohledávané části stromu, např. heuristiky, neuronové sítě či Monte Carlo techniky.
 
-It is very advisable to skim through a book about scientific English writing before starting the thesis. I can recommend `\citetitle{glasman2010science}' by \citet{glasman2010science}.
+V první kapitole se věnuji seznámení s teorií her, zejména konceptům řešení a informacím užitečným pro hry s neúplnou informací. Informace poskytují vhled do vytváření inteligentních agentů. Dále představuji Monte Carlo techniky a z nich odvozený Monte Carlo Tree Search (MCTS). Ukazuji problémy MCTS a naznačuji jejich řešení. Pro řešení problému neúplné informace popisuji algoritmus Information Set MCTS (ISMCTS).
+
+Další kapitola se zabývá dvěma souvisejícími bakalářskými pracemi.\hfill Procházím jejich poznatky a přínosy. Mimo to představuji v tuto chvíli nejsilnější a nejobecnější algoritmus pro hry s neúplnou informací, Student of Games. 
+
+Ve třetí kapitole popisuji vývojové prostředí Unity a svou implementaci hry na motivy Scotland Yard (či české verze Fantom staré Prahy). Podrobně procházím strukturu programu. %Dále představuji Monte Carlo techniky a z nich odvozený Monte Carlo Tree Search (MCTS). Ukazuji problémy MCTS a naznačuji jejich řešení. 
+Má implementace umělé inteligence využívá Monte Carlo techniky v algoritmu Information Set Monte Carlo Tree Search (ISMCTS). Představuji i jiného hráče, který využívá pro rozhodování heuristiku vymyšlenou podle vlastností domény hry.
+
+V poslední kapitole porovnávám v experimentech kvalitu hráčů. Pro experimenty jsem připravil tři různé mapy. Z výsledků vyplývá, že úroveň hráčů je různá. Díky různým úrovním poskytují uživateli škálu obtížností při volbě protihráče. 
+
+%Vývoj umělé inteligence a teorie her představuje fascinující oblast, která má široké uplatnění v mnoha odvětvích, včetně herního průmyslu. Tato bakalářská práce se zaměřuje na propojení těchto dvou disciplín s cílem vytvořit pokročilé herní prostředí s inteligentními herními agenty.
+
+%První část práce se věnuje úvodnímu seznámení s teorií her, která poskytuje základní rámec pro analýzu strategických interakcí mezi účastníky. Dále se zabývám analýzou dvou souvisejících bakalářských prací.
+
+%Hlavním cílem práce je implementace a vyhodnocení pokročilého algoritmu umělé inteligence do herního prostředí vytvořeného v platformě Unity. Tento algoritmus využívá přístup založený na Monte Carlo technikách upravený pro hry s neúplnou informací, ISMCTS (Information Set Monte Carlo Tree Search), a má za cíl efektivně se rozhodovat v mé hře. Pro porovnání implementuji i umělého hráče hrajícího podle vymyšlené heuristiky dle vlastností domény hry.
+
+%Dále popisuji experimenty, které jsem použil k vyhodnocení implementovaných algoritmů. Na základě experimentálních výsledků porovnávám efektivitu a použitelnost navržených umělých inteligencí a jejich použitelnost pro hraní proti reálným hráčům.
+
+
+%Introduction should answer the following questions, ideally in this order:
+%\begin{enumerate}
+%\item What is the nature of the problem the thesis is addressing?
+%\item What is the common approach for solving that problem now?
+%\item How this thesis approaches the problem?
+%\item What are the results? Did something improve?
+%\item What can the reader expect in the individual chapters of the thesis?
+%\end{enumerate}
+
+%Expected length of the introduction is between 1--4 pages. Longer introductions may require sub-sectioning with appropriate headings --- use \texttt{\textbackslash{}section*} to avoid numbering (with section names like `Motivation' and `Related work'), but try to avoid lengthy discussion of anything specific. Any ``real science'' (definitions, theorems, methods, data) should go into other chapters.
+%\todo{You may notice that this paragraph briefly shows different ``types'' of `quotes' in TeX, and the usage difference between a hyphen (-), en-dash (--) and em-dash (---).}
+
+%It is very advisable to skim through a book about scientific English writing before starting the thesis. I can recommend `\citetitle{glasman2010science}' by \citet{glasman2010science}.

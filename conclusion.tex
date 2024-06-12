@@ -1,10 +1,13 @@
 
-\chapwithtoc{Conclusion}
+\chapwithtoc{Závěr}
+V rámci práce jsem implementoval hru na motivy Fantom staré Prahy a dva druhy umělých agentů a popsal základy teorie her a některé jejich aplikace. Popis dvou souvisejících bakalářských prací a velmi aktuálního článku mi poskytl zajímavé poznatky a vhled do řešení daného problému.
 
-In the conclusion, you should summarize what was achieved by the thesis. In a few paragraphs, try to answer the following:
-\begin{itemize}
-\item Was the problem stated in the introduction solved? (Ideally include a list of successfully achieved goals.)
-\item What is the quality of the result? Is the problem solved for good and the mankind does not need to ever think about it again, or just partially improved upon? (Is the incompleteness caused by overwhelming problem complexity that would be out of thesis scope\todo{This is quite common.}, or any theoretical reasons, such as computational hardness?)
-\item Does the result have any practical applications that improve upon something realistic?
-\item Is there any good future development or research direction that could further improve the results of this thesis? (This is often summarized in a separate subsection called `Future work'.)
-\end{itemize}
+Implementoval jsem hru v herním engine Unity. Součástí práce je i hra samotná a její popis. Pro vývoj hry bylo potřebné získat znalosti o herním engine Unity a aplikovat je. 
+
+Hlavním cílem této práce bylo implementovat algoritmus umělé inteligence do hry. V rámci práce jsem implementoval dva druhy umělých agentů. První využívá heuristiky vymyšlené na základě domény hry, druhý naopak využívá Monte Carlo techniky v algoritmu Information Set Monte Carlo Tree Search (ISMCTS), které přímo nevyužívají žádné znalosti domény. 
+
+Pro otestování funkčnosti a úrovně umělých inteligencí jsem připravil menší turnaj. V prvním kole se utkala umělá inteligence využívající heuristiku proti náhodnému hráči. Heuristika vyhrála v obou případech, jak za Fantoma, tak za detektivy. Ve druhém kole se vítěz prvního kola utkal s~hráčem používajícím ISMCTS. Výsledky byly smíšené, za Fantoma vyhrál hráč s~ISMCTS, za detektivy naopak heuristika. Celý turnaj probíhal na třech různých mapách, v každém kole se provedlo 50 her pro obě možnosti umělých inteligencí.
+
+Z výsledků experimentů vidíme, že umělí hráči hrají se snahou vyhrát. Díky výhrám na obou stranách můžeme usoudit, že zvolené mapy a parametry umožňují vyhrát jak Fantomovi, tak detektivům. Výherce je hráč s lepší strategií vůči jeho oponentovi. Algoritmus ISMCTS, který je nejen složitý, ale i aktuální, se prokázal být funkčním.
+
+Implementace hry nabízí možnost za Fantoma i detektivy zvolit reálného i umělého hráče, umožňuje tedy hrát lidským hráčům proti sobě, ale i proti různě silným soupeřům umělé inteligence.

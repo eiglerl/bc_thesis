@@ -1,67 +1,416 @@
-\chapter{Important first chapter}
-\label{chap:refs}
+\chapter{Teorie her}  
 
-First chapter usually builds the theoretical background necessary for readers to understand the rest of the thesis. You should summarize and reference a lot of existing literature and research.
+Teorie her se zabývá formálním pohledem na hry a hráče modelované strategiemi. Jako hlavní průkopník je považován John von Neumann. Společně s ekonomem Oskarem Morgensternem vydali v roce 1940 knihu Theory of Games and Economic Behavior \cite{vonneumann1947}. %Jedním z hlavních pilířů moderních úspěchů teorie her je věta o existenci ekvilibrií ve hrách dvou hráčů s nulových součtem dokázaná Johnem von Neumannem. 
 
-You should use the standard \emph{citations}\todo{Use \textbackslash{}emph command like this, to highlight the first occurrence of an important word or term. Reader will notice it, and hopefully remember the importance.}.
+Základní pojmy a definice teorie her jsou převzaté, a případně i upravené, ze skript k předmětu Algorithmic game theory (NDMI098) \cite{Balko} na MFF, která jsou napsaná M. Balkem, a z dizertační práce Search in Imperfect Information Games M. Schmida \cite{Schmid}. 
 
-\begin{description}
-\item[Obtaining bibTeX citation] Go to Google Scholar\footnote{\url{https://scholar.google.com}}\todo{This footnote is an acceptable way to `cite' webpages or URLs. Documents without proper titles, authors and publishers generally do not form citations. For this reason, avoid citations of wikipedia pages.}, find the relevant literature, click the tiny double-quote button below the link, and copy the bibTeX entry.
-\item[Saving the citation] Insert the bibTeX entry to the file \texttt{refs.bib}. On the first line of the entry you should see the short reference name --- from Scholar, it usually looks like \texttt{author2015title} --- you will use that to refer to the citation.
-\item[Using the citation] Use the \verb|\cite| command to typeset the citation number correctly in the text; a long citation description will be automatically added to the bibliography at the end of the thesis. Always use a non-breakable space before the citing parenthesis to avoid unacceptable line breaks:
-\begin{Verbatim}
-Trees utilize gravity to invade ye
-noble sires~\cite{newton1666apple}.
-\end{Verbatim}
-\item[Why should I bother with citations at all?] For two main reasons:
+\section{Hra v normální formě} 
+
+\subsection{Definice}
+
+Hra v normální formě je trojice $(\mathcal{N}, \mathcal{A}, u)$, kde 
 \begin{itemize}
-\item You do not have to explain everything in the thesis; instead you send the reader to refer to details in some other literature. Use citations to simplify the detailed explanations.
-\item If you describe something that already exists without using a citation, the reviewer may think that you \emph{claim} to have invented it. Expectably, they will demand academic correctness, and, from your perspective, being accused of plagiarism is not a good starting point for a successful defense. Use citations to identify the people who invented the ideas that you build upon.
-\end{itemize}
-\item[How many citations should I use?]
-Cite any non-trivial building block or assumption that you use, if it is published in the literature. You do not have to cite trivia, such as the basic definitions taught in the introductory courses.
-
-The rule of thumb is that you should read, understand and briefly review at least around 4 scientific papers. A thesis that contains less than 3 sound citations will spark doubt in reviewers.
-\end{description}
-
-There are several main commands for inserting citations, used as follows:
-\begin{itemize}
-\item \citet{knuth1979tex} described a great system for typesetting theses.
-\item We are typesetting this thesis with \LaTeX, which is based on \TeX{} and METAFONT~\cite{knuth1979tex}.
-\item \TeX{} was expanded to \LaTeX{} by \citet{lamport1994latex}, hence the name.
-\item Revered are the authors of these systems!~\cite{knuth1979tex,lamport1994latex}
+\item $\mathcal{N}$ je konečná množina $n$ hráčů,
+\item $A_i$ je množina akcí hráče $i \in \mathcal{N}$,
+\item $\mathcal{A} = A_1 \times ... \times A_n$ je profil akcí,
+\item $u = (u_1, ..., u_n)$, kde $u_i: \mathcal{A} \to \mathbb{R}$ je funkce odměn (utility/payoff function) pro hráče $i \in \mathcal{N}$ \cite{Balko}.
 \end{itemize}
 
-\section{Some extra assorted hints before you start writing English}
 
-\paragraph{Word order}
-Strictly adhere to the English word order rules. The sentences follow a fixed structure with a subject followed by a verb and an object (in this order). Exceptions to this rule must be handled specially, and usually separated by commas.
+\begin{figure}
+    \centering
+    \caption{Matice odměn obou hráčů pro hru Kámen nůžky papír}
+    \[
+    \begin{bmatrix}
+        (0,0) & (-1,1) & (1,-1) \\
+        (1,-1) & (0,0) & (-1,1) \\
+        (-1,1) & (1,-1) & (0,0) \\
+    \end{bmatrix}
+    \]
+    \label{fig:gamematrix}
+\end{figure}
 
-\paragraph{Sentence structure}
-Do not write long sentences. One sentence should contain exactly one fact. Multiple facts should be grouped in a paragraph to communicate one coherent idea. Both the sentences and paragraphs should include various hints about their relation to the other ideas and paragraps. These are typically materialized as adverbs or short sentence parts that clarify the cause--outcome and target--method--result relationship of the sentences in a paragraph. Such `word glue' helps the readers to correctly draw the lines that hold their mental images of your thesis together, and ideally see the big picture of what you were trying to convey right from the first read.
 
-Paragraphs are grouped in labeled sections for a sole purpose of making the navigation in the thesis easier. Do not use the headings as `names for paragraphs' --- the text should make perfect sense even if all headings are removed. If a section of your text contains one paragraph per heading, you might have wanted to write an explicit list instead.
+\subsubsection{Strategie}
 
-Mind the rules for placing commas:
+Znakem $\Delta(A)$ značíme množinu všech pravděpodobnostních distribucí na množině $A$, tj. pro každé $p \in \Delta(A)$ platí, že $\forall a \in A: p(a) >= 0$ a $\sum_{a \in A} p(a) = 1$. 
+Strategie hráče $i \in \mathcal{N}$ je $\pi_i \in \Delta(A_i)$ taková, že hráč $i$ zahraje akci $a \in A_i$ s pravděpodobností $\pi_i(a)$. Množina všech strategií hráče $i$ je $\Pi_i$.
+Čistá strategie je strategie, kde hráč $i$ vybere akci $a \in A_i$ s~pravděpodobností 1, neboli $\pi_i(b) = 1$ pro $b=a$, ostatní s pravděpodobností $0$. Taková strategie je deterministická.
+Smíšená strategie je strategie, kde $\pi_i$ je pravděpodobnostní distribuce hráče $i$ přes akce z $A_i$. Množina smíšených strategií je nadmnožinou množiny čistých strategií. \cite{Balko}
+
+Velmi užitečný koncept je tzv. support strategie $\pi_i$, formálně $supp(\pi_i) = \{a \in A_i | \pi_i(a) > 0 \}$\cite{Schmid}. 
+
+Profil strategií všech hráčů je $\pi = (\pi_1, ..., \pi_n)$, pak značíme $\pi_{-i}$ profil strategií všech hráčů kromě $i$-tého.  
+
+Hru G dvou hráčů, neboli $G = (\{1,2\}, \mathcal{A}, u)$, můžeme popsat maticí, příklad na Obrázku~\ref{fig:gamematrix}. Řádky matice znázorňují akce hráče $1$ ($A_1$), a sloupce akce hráče $2$ ($A_2$).  
+
+\subsection{Hra s nulovým součtem} 
+
+Hra s nulovým součtem (zero-sum game) je hra dvou hráčů, kde pro každou dvojici akcí $a=(a_1, a_2) \in (A_1, A_2)$ platí $u_1(a) = -u_2(a)$. Neboli zisk jednoho hráče je ztráta druhého. 
+
+Nejčastěji je hra reprezentovaná maticí $M$, příklad na Obrázku~\ref{fig:zerosummatrix}, kde $M_{i,j} = u_1(i, j)$ pro $i \in A_1, j \in A_2$, tedy utility matice hráče $1$. Díky vlastnostem her s nulovým součtem je zřejmé, že utility matice hráče $2$ je $-M$, kde $(-M)_{i,j} = u_2(i,j) = -u_1(i,j)$.   
+
+\begin{figure}
+    \centering
+    \caption{Zjednodušená matice odměn pro hru Kámen nůžky papír}
+    \[
+    \begin{bmatrix}
+        0 & -1 & 1 \\
+        1 & 0 & -1 \\
+        -1 & 1 & 0 \\
+    \end{bmatrix}
+    \]
+    \label{fig:zerosummatrix}
+\end{figure}
+
+\section{Hra v rozšířené formě}
+Často ve hrách hrají hráči postupně, oproti tomu u hry v normálním tvaru předpokládáme, že hráči hrají najednou. Hra v rozšířené formě (extensive form game) počítá s tím, že hráči se střídají. Hry se dají reprezentovat orientovaným stromem, kde vrcholy reprezentují stav hry. Z každého vrcholu vede tolik hran, kolik hráč na tahu má možných akcí z daného stavu. Hra začíná v kořenu a končí v listech. Listy mají přiřazené utility hodnoty.
+
+Pokud hráči vždy znají celý aktuální stav hry, jedná se o hru s úplnou informací. Ve stromu jsou reprezentovány všechny možné stavy. Příkladem jsou hry go, šachy či tic-tac-toe. Naopak pokud hráči nemají všechny informace ohledně zahraných akcí ostatních hráčů, či jejich stavu, jedná se o hru s neúplnou informací, např. Poker, Scotland Yard. Hra se, kromě obecného stromu hry, dá reprezentovat stromy hráčů. Strom pro každého hráče obsahuje vrcholy reprezentující informační stav (information state) hráče - všechny možné stavy hry, které jsou z pohledu daného hráče stejné díky neznalosti všech informací, jsou sjednocené do jednoho. Ve stromě se kromě rozhodovacích vrcholů hráčů můžou nacházet i "chance" vrcholy, kde se s nějakou pravděpodobnostní distribucí vybere náhodná akce, např. rozdávání karet, hod kostkou \cite{Schmid}.  
+
+Simultánní hry dvou hráčů, které se například dají reprezentovat jako hra v~normální formě či maticí, se dají také reprezentovat pomocí herního stromu a popisu jako hra v extenzivní formě. Simultánnost je vyřešena rozdělením stavů stromu do informačních stavů, neboli nejdříve zahraje jeden hráč, ale druhý zjistí akci prvního hráče až po svém tahu.  
+
+Naštěstí se dá většina definic a konceptů pro hry v normální formě převést či rozšířit i pro hry v rozšířené formě.
+
+\subsection{Definice}
+
+Formálně se hra v rozšířené formě skládá z:
 \begin{itemize}
-\item Do not use the comma before subordinate clauses that begin with `that' (like this one). English does not use subordinate clauses as often as Slavic languages because the lack of a suitable word inflection method makes them hard to understand. In scientific English, try to avoid them as much as possible. Ask doubtfully whether each `which' and `when' is necessary --- most of these helper conjunctions can be removed by converting the clause to non-subordinate.
-
-As an usual example, \xxx{\textit{`The sentence, which I wrote, seemed ugly.'}} is perfectly bad; slightly improved by \xxx{\textit{`The sentence that I wrote seemed ugly.'}}, which can be easily reduced to \textit{`The sentence I wrote seemed ugly.'}. A final version with added storytelling value could say \textit{`I wrote a sentence but it seemed ugly.'}
-\item Use the \emph{Oxford comma} before `and' and `or' at the end of a longer, comma-separated list of items. Certainly use it to disambiguate any possible mixtures of conjunctions: \textit{`The car is available in red, red and green, and green versions.'} Remember that English `or' is typically understood more like `either this or that, but not both,' and the use of `and` is much more appropriate in cases such as possibility overviews and example listings (like in this sentence).
-\item Consider placing extra commas around any parts of the sentence that break the usual word order, especially if they are longer than a single word.
+  \item $\mathcal{N}$ je množina $n$ hráčů,
+  \item $\mathcal{H}$ je množina možných posloupností akcí, neboli historií, prázdná posloupnost $\lambda \in \mathcal{H}$, historii $h$ zřetězenou s akcí $a$ značíme $ha$, pak každý prefix historie je historie, $ha \in \mathcal{H} \implies h \in \mathcal{H}$,
+  \item $\mathcal{Z} \subset \mathcal{H}$ je množina terminálních historií, takových historií, které nejsou prefix žádné jiné historie,
+  \item pro neterminální historii $h \in \mathcal{H} \setminus \mathcal{Z}$ je $\mathcal{A}(h) = \{a | ha \in \mathcal{H}\}$ množina možných akcí v historii $h$,
+  \item $u = (u_1, ..., u_n)$, kde $u_i: \mathcal{Z} \to \mathbb{R}$ je utility funkce hráče $i$,
+  \item funkce $p: \mathcal{H} \setminus \mathcal{Z} \to \mathcal{N} \cup \{c\}$, která každé neterminální historii udělí hráče na tahu nebo náhodu $c$ (např. rozdávání karet),
+  \item funkce $f_c$, která každé historii $h \in \mathcal{H}$ takové, že $p(h) = c$, přidělí pravděpodobnostní distribuci přes akce v dané historii $\mathcal{A}(h)$, $f_c(h) \in \Delta(\mathcal{A}(h))$,
+  \item pro hráče $i \in \mathcal{N}$ je $\mathcal{I}_i$ informační rozdělení (information partition) historií $h \in \mathcal{H}: p(h) = i$, $I_i \in \mathcal{I}_i$ je informační stav (information state/set) hráče $i$, který obsahuje pro něj nerozeznatelné historie, také očividně $\forall I_i \in \mathcal{I}_i, \forall h,h' \in I_i: \mathcal{A}(h) = \mathcal{A}(h')$, proto možné akce v informačním stavu $I_i$ značíme $\mathcal{A}(I_i)$. \cite{RegretInImperfectInformation}
+  
 \end{itemize}
 
-\paragraph{Nouns}
-Every noun needs a determiner (`a', `the', `my', `some', \dots); the exceptions to this rule, such as non-adjectivized names and indeterminate plural, are relatively scarce. Without a determiner, a noun can be easily mistaken for something completely different, such as an adjective or a verb.
+\subsection{Strom hry}
 
-Name all things with appropriate nouns to help both the reader and yourself, and do not hesitate to invent good names and labels for anything that you will refer to more than once. Proper naming will save you a lot of writing effort because you will not have to repeat descriptions such as \xxx{\textit{`the third output of the second benchmarked method of the improved set,'}} instead you may introduce a labeling that will allow you to say just something like \textit{`output M2\textsuperscript{+}-3'}. At the same time, this will reduce the risk that the reader will confuse the object with another one --- for illustration, the long version of the previous example might very easily confuse with the second output of the third method. The same also applies to methods descriptions, algorithms, programs, testing datasets, theorems, use-cases, challenges and other things. As an example, \xxx{\textit{`the algorithm that organizes the potatoes into appropriate buckets'}} shortens nicely as \textit{`the potato bucketer'} and may be labeled as a procedure \textsc{BucketPotatoes()}, and \xxx{\textit{`the issue where the robot crashes into a wall and takes significant time to return to the previous task'}} may be called just \textit{`the crash--recovery lag'}.
+Strom hry pak obsahuje vrchol pro každou historii v množině všech historií $\mathcal{H}$ s~tím, že terminální vrcholy jsou podle terminálních historií $\mathcal{Z}$. Pro každý vrchol daný historií $h$ je daný hrající hráč $p(h)$, jeho možné akce $\mathcal{A}(h)$, akce $a \in \mathcal{A}(h)$ vede do nového vrcholu daného historií $ha \in \mathcal{H}$. 
 
-\paragraph{Verbs}
-Although English can express a whopping 65 base verb tenses and their variants, scientific literature often suppresses this complexity and uses only several basic tenses where the meaning is clearly defined. Typically, you state facts in present simple (\textit{`Theorem 1 proves that Gadget B works as intended.'}), talk about previous work and experiments done in past simple (\textit{`We constructed Gadget B from Gizmo C, which was previously prepared by Tinkerer et al.'}), and identify achieved results in present perfect (\textit{`We have constructed Technology T.'}). Avoid using future tense, except for sections that explicitly describe future work --- as a typical mistake, if you state that the thesis \emph{will} describe something in later chapters, you imply that the description is not present there yet.
+\subsection{Strategie}
 
-Do not write sentences in passive voice, unless you explicitly need to highlight that something has passively subjected itself to an action. Active voice is more preferable in the theses because it clearly highlights the actors and their contributions --- typically, \textit{`you did it'} instead of \textit{`it was done'} by a mysterious entity, which the reviewers rarely envision as yourself. Writing in active voice additionally benefits the explanation of complex processes: There, the word order forces you to identify the acting subject as the first word in the sentence, which further disambiguates how the individual process parts are triggered and ordered.
+Hra v rozšířené formě oproti hře v normální formě už není pouze jednotahová. Hráči se v hraní střídají, hrající hráč je určený funkcí $p$. Strategie hráče už také pouze neudává pravděpodobnostní rozdělení akcí hráče, ale vrací pravděpodobnostní rozdělení možných akcí v každém informačním stavu. Formálněji je strategie hráče $i$ takové $\pi_i$, splňující $\pi_i: I \in \mathcal{I}_i \to \Delta(\mathcal{A}(I))$.
 
-Try to avoid overusing gerunds (verbs that end with `-ing'). It is convenient to write shorter sentences by using gerunds as adjectives, but these are typically quite hard to understand because the readers may easily confuse the intended adjectives with verbs. If your sentence contains two gerunds close to each other, it may need a rewrite.
+\subsection{Pravděpodobnost dosažení}\label{sub:prob}
 
-\paragraph{Scientific writing resources}
-Consult the book by \citet{glasman2010science} for more useful details and recommended terminology for writing about the scientific research. Very pragmatically, the book by \citet{sparling1989english} describes many common mistakes that Czech and Slovak (and generally Slavic) writers make when writing English.
+Nechť $P^\pi(h)$ je pravděpodobnost, že historie $h \in \mathcal{H}$ nastane, pokud hráči hrají podle $\pi$. Pravděpodobnost můžeme rozložit zvlášť na příspěvek každého hráče, $P^\pi(h) = \prod_{i \in \mathcal{N} \cup \{c\}}P^\pi_i(h)$, $P^\pi_i(h)$ pak říká pravděpodobnost, že hráč $i$ zahraje všechny akce $a$ takové, že $h'a$ je vlastní prefix $h$, kde $p(h') = i$. Nechť $P_{-i}^\pi$ je součin pravděpodobností všech hráčů kromě $i$-tého. Pro informační set $I \subseteq \mathcal{H}$, nechť $P^\pi(I) = \sum_{h \in I} P^\pi(h)$ jako pravděpodobnost dosažení informačního setu $I$ při strategickém profilu $\pi$ \cite{RegretInImperfectInformation}. 
+
+\subsection{Očekávaná odměna}
+
+Pro výpočet očekávané odměny pro hráče $i$ potřebujeme znát strategický profil $\pi$ (strategie všech hráčů). Očekávaná odměna pak bude součet odměn v~terminálním stavu vynásobených pravděpodobností jejich dosažení \cite{RegretInImperfectInformation}, $u_i(\pi) = \sum_{z \in \mathcal{Z}} P^\pi(z)u_i(z)$. 
+
+
+\subsection{Podhra}
+
+Podhra je podproblém celkového problému - hry. Ve hrách s~úplnou informací stačí pro řešení podproblému  pouze podstrom zakořeněný ve vnitřním vrcholu herního stromu. Samostatný podstrom obsahuje všechny potřebné informace - stav a budoucí stavy. 
+
+Oproti tomu v~hrách s~neúplnou informací to není tak jednoduché. Podhra je identifikovaná veřejným stavem a distribucemi přes vrcholy v informačních stavech všech hráčů v~daném veřejném stavu \cite{Schmid}.
+%Ve hrách s úplnou informací můžeme definovat podhru jako podstrom zakořeněný v nějakém vrcholu hry. Pro hry s neúplnou informací je to složitější. Podhra je identifikovaná veřejným stavem a distribucemi přes informační stavy (state) všech hráčů v daném veřejném stavu. 
+
+\section{Optimální strategie}
+
+Při hledání strategií pro hráče se používají buď offline algoritmy nebo online algoritmy. 
+Offline algoritmy spočívají v tom dopředu zjistit strategii a uložit ji tak, aby pro aktuální stav bylo možné získat strategii. Většinou se využívá nějaká forma tabulky, případně implicitní reprezentace. V zásadě jde při získání optimální strategie o vyřešení hry.
+U složitějších a větších her není možné uložit strategii do tabulky. Online algoritmy proto počítají strategii při hře. Jedna z možností je využití prohledávání herního stromu.
+
+\subsection{Nejlepší odpověď}
+
+Mějme hru a předpokládejme, že strategie hráče $i$ je fixní. Pak nejlepší odpověď (best response) na strategii $\pi_i$ je $\pi_{-i}$ taková, že maximalizuje utility hodnotu $u_{-i}$.
+
+Formálně je nejlepší odpověď na strategii $\pi_i$ hráče $i$ smíšená strategie, $BR(\pi_i) \stackrel{def}{=} \argmax_{\pi_{-i} \in \Pi_{-i}} u_{-i}(\pi_i, \pi_{-i})$. \cite{Schmid}
+
+Pro hry dvou hráčů s nulovým součtem je ekvivalentní, když oponent maximalizuje svůj zisk a minimalizuje náš, tedy $\argmax_{\pi_{-i}} u_{-i}(\pi_i, \pi_{-i}) = \argmin_{\pi_{-i}} u_i(\pi_i, \pi_{-i})$. Z této vlastnosti vyplývá, že utility hodnota strategie hrající proti kterékoliv nejlepší odpovědi je unikátní. Hodnota nejlepší odpovědi (best response value) je definovaná jako $BRV_i(\pi_i) = \min_{\pi_{-i}} u_i(\pi_i, \pi_{-i}) = -\max_{\pi_{-i}} u_{-i}(\pi_i, \pi_{-i}) = u_i(\pi_i, BR(\pi_i))$. \cite{Schmid}
+
+Vždy existuje deterministická nejlepší odpověď na strategii \cite{Balko}. Výpočet pro hry s neúplnou informací je ale složitější než pro hry s úplnou informací. Kvůli existenci informačních stavů (nerozlišitelných historií pro hráče) nestačí pouze projít zbytek stromu, ale je potřeba do toho počítat i předchozí tahy.
+
+\subsection{Nash. Ekvilibrium}
+
+Nashovo equilibrium (NE) je profil strategií $\pi$ takový, že $\forall i \in \mathcal{N}: \pi_i$ je nejlepší odpověď na $\pi_{-i}$. Slovně řečeno, žádný racionální hráč (sám o sobě) nechce změnit strategii, ve smyslu, že si jinou strategií nemůže pomoci, pokud ostatní hráče zafixujeme a budou stále hrát tu svojí zvolenou strategii. Strategický profil $\pi$ je NE právě, když $\forall i \in \mathcal{N}, \forall \pi_i' \in \Pi_i: u_i(\pi_, \pi_{-i}) \geq u_i(\pi_i', \pi_{-i})$. Případně je možné NE definovat pomocí nejlepších odpovědí, strategický profil $\pi$ je NE právě, když $\forall i \in \mathcal{N}: \pi_i$ je nejlepší odpovědí na $\pi_{-i}$. \cite{Schmid}
+
+Podle Nashovy věty má každá konečná hra v normální formě s konečným počtem hráčů Nashovo ekvilibrium \cite{Balko}.  
+
+\subsection{$\epsilon$-Nash. Ekvilibrium}
+
+U složitějších her není vždy jednoduché najít Nashovo ekvilibrium. Využívá se proto například méně restriktivní pojem $\epsilon$-Nashovo ekvilibrium. Říká, že hráč $i$ při znalosti strategií ostatních hráčů $\pi_{-i}$ si nemůže pomoci změnou své strategie $\pi_i$ o více než $\epsilon$.  
+Neboli formálněji je strategický profil $\pi$ $\epsilon$-Nashovo ekvilibrium právě když, $\forall i \in \mathcal{N}, \forall \pi_i' \in \Pi_i: u_i(\pi_i, \pi_{-i}) \geq u_i(\pi_i', \pi_{-i}) - \epsilon$. \cite{Balko} 
+
+
+\subsection{Maximin}
+
+Jednou z možných optimálních strategií je uvažování protihráče, který reaguje nejlepší odpovědí, v hrách s nulovým součtem to zároveň znamená pro nás nejhorší možností. Optimalizování, neboli hledání nejlepší strategie, proti takovému hráči je tzv. Maximin.
+Proti Nashově ekvilibriu je maximin definovaný pro strategii hráče, ne pro strategický profil všech hráčů. Formálně je Maximin strategie hráče~$i$,
+\begin{equation}
+    \argmax_{\pi_i \in \Pi_i} \min_{\pi_{-i} \in \Pi_{-i}} u_i(\pi_i, \pi_{-i}) = \argmax_{\pi_i \in \Pi_i} BRV_i(\pi_i)
+\hbox{.}\end{equation}
+Hodnota maximin strategie je $\underline{v_i} = max_{\pi_i \in \Pi_i} BRV_i(\pi_i)$.
+Množina všech maximin strategií pro hráče $i$ je $\mathbb{MAXIMIN}_i = \{\pi_i | BRV_i(\pi_i) = \underline{v_i}\}$.\cite{Schmid}
+
+
+\subsubsection{Minimax theorem}
+V hrách s nulovým součtem platí: \cite{Schmid}
+\begin{equation}
+    \max_{\pi_i} \min_{\pi_{-i}} u_i(\pi_i, \pi_{-i}) = \min_{\pi_{-i}} \max_{\pi_i} u_i(\pi_i, \pi_{-i})
+\end{equation}
+
+Je to jedna ze základních vět teorie her, byla dokázána John von Neumannem v roce 1928 \cite{NeumannMinimax}.
+
+\subsection{NE a Maximin}
+
+Nashovo ekvilibrium i Maximin jsou pro hry s nulovým součtem dvou hráčů zajímavé, protože:
+
+$(\pi_1, \pi_2)$ je NE $\Leftrightarrow \pi_1 \in \mathbb{MAXIMIN}_1 \land \pi_2 \in \mathbb{MAXIMIN}_2$  
+\cite{Schmid}
+
+Pro hru s nulovým součtem dvou hráčů má využití optimální strategie dobré důvody:  
+
+$(\pi_i, \pi_{-i})$ NE $: \forall \pi_{i}', \pi_{-i}': u_i(\pi_i, \pi_{-i}') + u_{-i}(\pi_i', \pi_{-i}) \geq 0$,  
+
+neboli při použití optimální strategie nemůže hráč prohrát, maximálně remizovat při hře proti optimálnímu hráči.
+\cite{Schmid}
+
+\subsection{Regret}
+% článek
+Následující tři odstavce používají terminologii článku Regret Minimization in Games with Incomplete Information \cite{RegretInImperfectInformation}.
+%TODO: https://www.cs.cmu.edu/~avrim/Papers/regret-chapter.pdf
+%https://proceedings.neurips.cc/paper/2007/file/08d98638c6fcd194a4b1e6992063e944-Paper.pdf  
+Koncept regret ("výčitky") se využívá v aktuálně velmi úspěšných algoritmech řešení her s~neúplnou informací \cite{Schmid_2023}. Regret minimalizace je algoritmus založený na učení. Agent opakovaně volí akce proti protihráči či prostředí. Regret měří rozdíl mezi nastřádaným ziskem agenta proti možnému zisku při hraní nejlepší akce (pro každé opakování). Algoritmus zaručuje dobré vlastnosti i proti nepřátelskému prostředí, které rozhoduje o své akci až po agentovi \cite{Balko}. 
+
+Existuje několik druhů regretu. Tak zvaný external regret porovnává aktuální výkon agenta proti jedné nejlepší akci, kterou mohl agent hrát pokaždé. Pak se například používá internal regret, který zkouší strategii agenta pozměnit v~právě jedné akci a porovnává kvalitu agenta proti nejlepší takové strategii \cite{Balko}.  %(https:\/\/link.springer.com\/chapter\/10.1007\/11503415\_42\#citeas)
+
+Mějme hru v normální formě $G$. Algoritmus běží v $T \in \mathbb{N}$ iteracích . Budeme uvažovat external regret. Agent (hráč $i$) si opakovaně volí strategii v každém čase, pak $\pi_i^t$ je zvolená strategie v~čase $t$. Agent po zahrání dle své strategie dostane odměnu $x^t = (x^t_{a_1}, \ldots) \in \mathcal{R}^{|A_i|}$. Ohodnocení strategie je pouze vážená suma odměn dle pravděpodobností akcí: $v^t = \sum_{a \in A_i} \pi_i^t(a)x^t_a$. Celková odměna do času $T$ je $X^T_{\pi_i} = \sum_{t=1}^T \sum_{a \in A_i} \pi_i^t(a)x^t_a = \sum_{t=1}^T v^t$. External regret akce $a \in A_i$ do času $T$ představuje výčitky nehraní akce $a$ v každém čase $t \leq T$, neboli $R_a^T = \sum_{t=1}^T x^t_a - X_{\pi_i}^T$. Celkový external regret představuje, jak moc litujeme, že jsme nezahráli nejlepší jednotlivou akci, $R^T = \max_{a \in A_i} R_a^T$.
+
+Regret má skvělé teoretické vlastnosti. Průměrný regret je propojený s kvalitou průměrné strategie. Následujícím algoritmem zajistíme, že regret roste pomaleji než lineárně, průměrný regret vůči času se bude blížit k 0. Strategie obou hráčů při dodržování algoritmu budou spadat do $\epsilon$-Nash. ekvilibria a konvergovat k Nash. ekvilibriu.
+
+
+%Průměrný celkový regret hráče $i$ v čase $T$ je: 
+
+%\begin{equation}    
+%R_i^T = \frac{1}{T} \max_{s_i^* \in S_i} \sum_{t=1}^T (u_i(s_i^*, s_{-i}^t) - u_i(s^t))\hbox{,}\label{eqv:AvgRegret}\end{equation}
+%neboli jak moc si mohl hráč $i$ pomoct zahráním lepší strategie.
+
+%V rovnici \ref{eqv:AvgRegret}
+
+%Pomocí průměrného regret můžeme definovat strategii $\overline{s_i^T}$ jako průměrnou strategii dle dosavadních výčitků. Formálně pro každý informační stavu $I$ a každou akci $a \in A(I): \overline{s_i^T}(I)(a) = \frac{\sum_{t=1}^T \pi^{s^t}_i(I)s_i^t(I)(a)}{\sum_{t=1}^T \pi^{s^t}_i(I)}$, kde  $\pi^{s^t}_i(I)$ je pravděpodobnost, že při strategickém profilu $s^t$ skončí hráč $i$ v informačním stavu $I$, $s_i^t(I)(a)$ pouze znamená pravděpodobnost, že hráč $i$ zahraje akci $a$ v informačním stavu $I$.
+
+\subsection{Regret Matching}
+
+Jeden užitečný algoritmus využívající konceptu regret je regret matching. Hráč si zvolí strategii, kde každou akci hraje proporcionálně podle pozitivního regretu dané akce. Nechť $R^{T+}_a = max(R^T_a, 0)$ pro $a \in A$, $R^T_a$ je akumulovaný regret pro akci $a$. Strategie hráče pak je $\pi(a) = \frac{R^{T+}_a}{\sum_{a' \in A} R^{T+}_{a'}}$. Pokud je jmenovatel rovný nule, $\sum_{a' \in A} R^{T+}_{a'} = 0$, pak se za strategii zvolí uniformní strategie přes všechny akce hráče \cite{Schmid}.  
+
+\subsection{Counterfactual Regret Minimization}\label{sub:cfr}
+% vysvětlit + příklad
+Informace v tomto odstavci jsou převzané z článku Regret Minimization in Games with Incomplete Information \cite{RegretInImperfectInformation}. Pravděpodobnosti dosažení využité v rovnicích níže jsou definovány v sekci~\ref{sub:prob}.
+
+Vysvětlení konceptu regret bylo na hře dvou hráčů v normální formě a kvalita aktuální strategie byla srovnávána s čistými strategiemi. Značná část her je ale sekvenční a vícetahová, ne simultánní. Counterfactual regret minimization (CFR) rozdělí regret do menších částí podle informačních stavů na tzv. counterfactual regret, který se dá minimalizovat samostatně po každém informačním stavu. Tato vlastnost platí díky omezení shora na celkový regret sumou counterfactual regretů.
+
+Mějme hráče $i \in \mathcal{N}$ a informační stav $I \in \mathcal{I}_i$. Nechť $u_i(\pi, h)$ je předpokládaná utility hodnota pro danou historii $h \in \mathcal{H}$ a strategický profil $\pi$. Nechť $u_i(\pi, I)$ je counterfactual utility hodnota, neboli předpokládaná utility hodnota při dosažení $I$ a každý hráč hraje podle strategického profilu $\pi$ kromě $i$-tého, který hraje tak, aby dosáhl informačního stavu $I$. Formálně, pokud $P^\pi(h, h')$ je pravděpodobnost dosažení historie $h'$ z historie $h$ pomocí strategického profilu $\pi$, tak 
+\begin{equation}
+    u_i(\pi, I) = \frac{\sum_{h \in I, h' \in \mathcal{Z}} P^\pi_{-i}(h)P^\pi(h, h')u_i(h')}{P^\pi(I)}
+\hbox{.}\end{equation} 
+
+Pro počítání výčitků nehraní nějaké akce, nechť pro každé $a \in A(I)$ je $\pi|_{I \to a}$ strategický profil identický k $\pi$, ale hráč $i$ vždy volí akci $a$ v informačním stavu $I$. Counterfactual regret pro informační stav $I$ a akci $a$ pak je 
+\begin{equation}
+    R^T_i(I, a) = \frac{1}{T} \sum^T_{t=1} P^{\pi^t}_{-i}(I)(u_i(\pi^t|_{I \to a}, I) - u_i(\pi^t, I))
+\hbox{.}\end{equation}
+Celkový counterfactual regret pro informační stav $I$ je pouze maximální přes akce,
+\begin{equation}
+    R^T_i(I) = \max_{a \in A(I)} R^T_i(I, a) 
+\hbox{.}\end{equation}
+Nejužitečnější je pozitivní část counterfactual regretu, $R^T_i(I)^+ = \max(R^T_i(I), 0)$
+
+\subsubsection{Regret Matching v CFR}\label{sub:rm}
+
+Pro každý informační stav $I \in \mathcal{I}_i$ a akci $a \in \mathcal{A}(I)$ si můžeme udržovat $R^T_i(I, a)$. Zvolená strategie v informačním stavu $I$ v čase $T+1$ je
+\begin{equation}
+    \pi^{T+1}_i(I, a) = \frac{R^T_i(I, a)^+}{\sum_{a \in A(I)} R^T_i(I,a)^+}
+\hbox{.}\end{equation}  
+Při nulovém jmenovali se zvolí uniformní strategie pro daný informační stav.
+
+%\section{Monte Carlo techniky}
+\section{Monte Carlo Tree Search}\label{sec:mcts}
+Informace ohledně Monte Carlo technik a samostatného Monte Carlo Tree Search pochazí z dizertační práce Monte Carlo Tree Search for Multi-Player Games \cite{Soete2013MonteCarloTS}.
+V případech, kdy není možné kvůli velikosti sestrojit herní strom pro celý průběh hry, se dají využít hloubkově omezené stromy s listy ohodnocenými ohodnocovací funkcí. Funkce je připravená podle znalostí z dané domény hry. Vymyšlení správné funkce, případně její výpočet, může být velmi náročné. 
+
+Techniky založené na Monte Carlo přístupu místo ohodnocovacích funkcí pro daný list simulují průběhy her. Při simulaci se vybírají akce do doby než hra skončí a je možné získat ohodnocení. Mnohonásobným simulováním se odhaduje ohodnocení listu. Metrika pro ohodnocení může být například procento výher.
+
+Monte Carlo Tree Search (MCTS) je technika, která postupně buduje strom pomocí opakovaných simulací. Díky využití Monte Carlo technik není potřeba ohodnocovací funkce. 
+
+%\subsection{Algoritmus}
+
+Jedna iterace základního algoritmu (Algoritmus 1) se skládá ze čtyř částí: selekce, expanze, simulace a zpětná propagace. Algoritmus běží stanovený počet iterací nebo stanovenou délku běhu.  
+
+\subsection{Selekce}
+V každé iteraci se z kořene stavěného stromu prochází do listu. Průchod je prováděn podle selekční strategie, která pro každý vrchol vybere jednoho z jeho potomků. Volba selekční strategie určuje v jakém poměru se využívají znalosti (exploitace) a prohledávání prostoru (explorace). Nejčastěji používaná strategie je UCT (Upper Confidence Bound 1 applied to trees) inspirovaná UCB1 (upper confidence bound, version 1). Využití UCB1 je pro řešení problému multi-armed bandit.
+
+\begin{equation}
+    v_c = \overline{x_{c}} + C \times \sqrt{\frac{\log{n_{p}}}{n_{c}}}
+\label{eqv:UCT}\end{equation}
+
+Formule \ref{eqv:UCT} z \cite{MultiArmedBandit} popisuje hodnotu pro potomka $c$ vrcholu $p$, kde $\overline{x_c}$ je výhernost vrcholu $c$ a $n_p$, respektive $n_c$, je počet průchodů skrz $p$, respektive $c$. Explorační parametr pro určení poměru exploitace a explorace je $C$, velmi často se využívá $C = \sqrt{2}$ vycházející přímo z UCB1. Při průchodu se v každém procházeném vrcholu vybere potomek $i$ s maximální hodnotou $v_i$ z možných potomků, dokud se nenarazí na vrchol, který není celý rozvinutý (v~budovaném stromu nejsou všichni jeho potomci).
+
+\subsection{Expanze}
+Fáze expanze slouží rozrůstání budovaného stromu hry. Nejčastěji se v každé iteraci přidá jeden nový potomek k poslednímu dosaženému vrcholu v selekci. Existují i jiné přístupy, kde se například přidá nový potomek teprve každých $n$ iterací, případně více potomků zároveň.
+
+Selekce a expanze jsou shrnuty v Algoritmu 2. 
+\subsection{Simulace (Algoritmus 3)}
+Z nově přidaného vrcholu se dohraje zbytek hry (rollout/playout) podle zvolené strategie. Často se používá náhodná - uniformní strategie přes možné akce pro každý stav. Výhodou je, že nevyžaduje žádné znalosti domény. Při zakomponování vlastností domény lze dosáhnout kvalitnějších simulací výměnou za složitější výpočet, což může snížit počet iterací, je-li běh časově omezený.
+
+\subsection{Zpětná propagace (Algoritmus 4)}
+Simulace končí při dosažení listu stromu hry a získání odměny. Odměna je poté propagovaná podél zvolených vrcholů. Ve vrcholech se ukládá výhra či prohra, případně i remíza, a aktualizuje se výhernost vrcholů a počet navštívení.  
+
+\subsection{Závěr algoritmu}
+Tyto čtyři fáze se opakují dokud nevyprší čas nebo předem daný počet iterací.  
+
+Výběr nejlepší akce se dá uskutečnit výběrem podle výhernosti, počtu navštívení, či jejich kombinací.
+
+\subsection{Pseudokód}\label{sub:mcts}
+Algoritmy ze \cref{sec:mcts} můžeme shrnout v následujících pseudokódech. 
+
+\begin{algorithm}
+\caption{Monte Carlo Tree Search}
+\begin{algorithmic}[1]
+\Function{MCTS}{$tree, time$}
+    \State $root \gets tree.root$
+    \State $end\_time \gets current\_time + time$
+    \While{$current\_time < end\_time$}
+        \State $leaf \gets$ Traverse($root$)\Comment{Selekce + Expanze}
+        \State $result \gets$ Rollout($leaf$)\Comment{Simulace hry}
+        \State BackPropagate($leaf, result$)\Comment{Zpětná propagace}
+    \EndWhile
+    \State \textbf{return} BestAction($root$)\Comment{Vracení nejlepší akce} 
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+\caption{Selekce a expanze}
+\begin{algorithmic}[1]
+\Function{Traverse}{$node$}
+    \While{IsFullyExpanded($node$)}\Comment{Hledáme nerozvinutý vrchol}
+        \State $node \gets$ BestChild($node$)\Comment{Nejzajímavější potomek podle UCT}
+    \EndWhile
+    \State \textbf{return} PickUnvisited($node$)\Comment{Vracení nově rozvinutého listu}
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+\caption{Simulace zbytku hry}
+\begin{algorithmic}[1]
+\Function{Rollout}{$node$}
+    \While{not $node$.IsTerminial()}\Comment{Simulovat dokud nenarazíme na list}
+        \State $action \gets$ RandomPossibleAction($node$)\Comment{Podle dané strategie}
+        \State $node \gets$ $node$.Child($action$)
+    \EndWhile
+    \State \textbf{return} GameValue($node$)\Comment{Získání výsledku hry}
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+\caption{Zpětná propagace}
+\begin{algorithmic}[1]
+\Function{BackPropagate}{$node, value$}
+    \State node.UpdateValue($value$)\Comment{Aktualizace počtu navštívení a výhernosti}
+    \If{$node$ is not null}
+        \State BackPropagate($node.parent, value$)\Comment{Rekurzivně voláme až ke kořeni}
+    \EndIf
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+\clearpage
+
+\subsection{MCTS a neúplná informace}
+Implementace MCTS využívá přesné znalosti aktuálního vrcholu v herním stromu pro budování pomocného stromu a simulování her. Proto je důležitý předpoklad, že hra, na kterou algoritmus používáme, má úplnou informaci (alespoň z pohledu hráče). Hry s neúplnou informací ztěžují situaci díky existenci informačních stavů - hráč neví přesný vrchol stromu, ale pouze podmnožinu možných vrcholů (případně s pravděpodobnostní distribucí přes možné vrcholy).
+
+\subsection{Determinizace} \label{subsub:ismcts}
+Jedno z možných řešení situace, kdy se hráč nachází v informačním stavu a nezná přímo svou pozici, je determinizace. Na začátku každé iterace se náhodně, buď uniformně či podle pravděpodobnostní distribuce vyvozené díky znalostem domény, zvolí jeden z možných vrcholů, neboli jedna z možných historií v informačním stavu, pro doplnění informací. Poté stačí použít klasický průběh MCTS iterace, jelikož neznámé informace byly doplněny. Upravený algoritmus má název Information Set MCTS (ISMCTS).
+
+Determinizace má teoretické nedostatky, například tzv. {\it strategy fusion} \cite{Soete2013MonteCarloTS} - algoritmus nalezne kvalitní strategii pro každou determinizaci zvlášť, nikoliv obecně. Navzdory tomu se v praxi prokázala silnými výsledky, často v karetních hrách.
+
+\subsubsection{Determinizace ve hře Fantom}
+Determinizaci využívají pouze detektivové, jak jsem již zmiňoval, pro Fantoma žádná skrytá informace není. 
+Skrytá informace pro detektivy je pouze pozice Fantoma. V každém kole zjistí, který dopravní prostředek zrovna Fantom využil, můžou tedy vyvodit jeho nové možné pozice. Také v některých kolech se Fantom ukáže a detektivové zjistí jeho reálnou pozici.  
+Na začátku každé iterace se zvolí jedna determinizace (Fantomovi se přiřadí jedna možná pozice) uniformně. Pro každou determinizaci se vytvoří vlastní strom bez skryté informace a pokračuje se pomocí MCTS. Po dokončení všech iterací se přes všechny determinizace aktuálního informačního stavu získá nejlepší akce, například průměrováním. 
+
+
+
+
+%\subsubsection{Counterfactual hodnoty}
+
+%Pravděpodobnost dosažení historie $h \in H$ pro hráče $i$, který se snaží dosáhnout $h$, se strategickým profilem $\pi$ je $P_{-i}^\pi = P_\tau(h) \prod_{j \in N \setminus \{i\}} P_j^\pi(h)$. Vážená hodnota akce $a \in A(s)$ ve stavu $I \in \mathcal{I}_i$ se strategickým profilem $s$ pro hráče $i$ je $q_{i,c}^s(I, a) = \sum_{h \in \mathcal{H}(I)} P_{-i}^s(h)q_i^s(h, a)$, kde $q_i^s(h,a)$ je hodnota podhry zakořeněné v historii $ha$. Pomocí vážené hodnoty akce ve stavu je definovaná vážená hodnota stavu $I$ jako $v_{i,c}^s(I) = \sum_{a \in A_i(I)} s_i(I, a)q_{i,c}^s(I,a)$.
+
+%\subsubsection{Counterfactual Regret}
+
+%Mějme posloupnost strategií $s^0, ..., s^{t-1}$, pak s pomocí vážené hodnoty akce ve stavu a vážené hodnoty stavu můžeme vypočítat counterfactual regret: 
+
+%\begin{equation}
+%    R_i^t(I, a) = \sum_{k=0}^{t-1}(q_{i,c}^{s^k}(I, a) - v_{i,c}^{s^k}(I))
+%\hbox{,}\end{equation}
+%\begin{equation}
+%    R_i^t(I) = \max_{a \in A(I)} R_i^t(I,a)
+%\hbox{.}\end{equation}
+
+%Pro výpočet strategií zase používáme pouze kladné regret hodnoty, $R_i^t(I)^+$. 
+
+
+\chapter{Související práce}
+
+%V roce 1997 poprvé dosáhla umělá inteligence DeepBlue II \cite{CAMPBELL200257} výhry proti velmistrovi a světovému šampionovi v šachách, Garry Kasparov. O rok dříve prohrál DeepBlue I proti stejnému oponentovi. DeepBlue II byl postavený na velkém paralelismu. Každou vteřinu ohodnocoval a zkoumal miliony stavů. Oproti DeepBlue I měl také komplexnější ohodnovací funkci pro stavy hry.
+
+%V minulosti byly programy na hraní her jako jsou šachy, go či shogi, stavěné na prohledávání herního stromu, případně s pomocí alfabeta prořezávání, a chytrých heuristik. Pro ohodnocování stavu využívaly funkce připravené a promyšlené mistry a vlastnosti dané domény. 
+
+\section{Související bakalářské práce}
+
+\subsection{FIT Michal Sova}
+
+Do řešení podobného problému - umělé inteligence ve hře Scotland Yard, se pouštěl i Michal Sova ve své bakalářské práci \cite{FITBT23706}. Využíval metod strojového učení.  
+
+Pro testování navrhl zjednodušenou verzi hry. Úprava hry spočívala v omezení počtu detektivů z původních pěti na pouze dva. Jelikož by Mr. X (obdoba Fantoma v původní verzi) byl poté ve velké výhodě, zmenšila se mapa na mřížku 5x5 (kde každý vrchol je propojen se všemi sousedy). Z dopravních prostředků zůstal pouze jeden a Mr. X přichází o své speciální tahy. Délka hry je zkrácená na 15 tahů z 22. Mr. X se ukáže jednou za tři kola, původně byl viděn přibližně jednou za pět kol.  
+
+Na navržené verzi hry byly porovnány dva různé postupy pro umělou inteligenci ve hře - Alfa-beta prořezávání a Monte Carlo Tree Search. Výsledky ukázaly, že procento výher u algoritmu Monte Carlo je nižší než u algoritmu Alfa-beta. Rozšíření hry pro algoritmus Alfa-beta nebylo úspěšné kvůli nedostatku vlastních zdrojů.  
+
+\subsection{MUNI Matej Rišňovský}
+
+Ve své bakalářské práci \cite{Risnovsky2020thesis} Matej Rišňovský implementoval hru Scotland Yard ve vývojovém prostředí Unity a zkoumal problémy návrhu umělé inteligence z~diplomové práce Mária Kudolániho \cite{Kudolani2018thesis}. 
+
+Za cíl měla práce vytvořit racionální umělou inteligenci, která bude hrát proti hráči, případně s ním. Do hry byly implementované 3 obtížnosti, které do rozhodování s nižší obtížností zavádějí vyšší chybovost.
+
+
+\section{Student of Games}
+
+\subsection{Představení}
+%\hyphenation{vy-mýš-le-né}
+Algoritmus Student of Games pochází z článku Student of Games: A unified learning algorithm for both perfect and imperfect information games \cite{Schmid_2023}.
+Hlavní myšlenkou je udělat umělou inteligenci obecnější. Původně byly vymýšlené umělé inteligence zaměřené pouze na jednu hru s použitím specifik z~domény dané hry. AlphaZero přišlo s možností hraní několika her s~plnou informací. Hlavní myšlenka algoritmu Student of Games (Google DeepMind) je zobecnění i pro hry s neúplnou informací. Využívá metod self-play a prohledávání stromu hry. Při učení se snaží konvergovat k Nash. ekvilibriu. Student of Games byl, mimo jiné, úspěšně aplikován na hru Scotland Yard jako příklad hry s neúplnou informací.
+
+\subsection{Neuronová síť}
+
+Místo ohodnocovací funkce využívá Student of Games neuronovou síť. Na vstupu síť dostane veřejný stav hry a pravděpodobnosti privátních stavů hráčů. Jako odpověď vrací pro každý privátní stav ohodnocení pro každého hráče a navíc strategie pro každý privátní stav pro hráče na tahu. Je použita feed-forward network a residual network.
+
+\subsection{CFR}
+
+Student of Games využívá algoritmus CFR pro vymyšlení strategie blížící se k~Nash. ekvilibriu, viz \cref{sub:cfr}.
+
+%Hrát moc předvídatelně je problém - protivník může jednoduše odhadnout private state a hrát best response strategii. Při hraní worst-case optimal strategií se tomuto problému vyhneme. Counter-factual regret minimalizace (CFR) konverguje k Nash.ekvilibriu - aproximace optimální strategie. CFR je self-play algoritmus. Strategie po iteraci T, získané jako průměrná dosavadní strategie, k $\epsilon$-Nash.ekvilibriu konverguje rychlostí O($\sqrt{T}$).
+
+%\subsection{Regret matching}
+
+%V iteraci T ve stavu s si hráč vypočítá regret pro každou nezahranou akci a: r(s, a) = v(s, a) - suma přes akce b v(s, b)*pr(s, b), kde v(s, a) je hodnota akce a ve stavu s (counter-factual value). Přes všechny iterace t = 0, ..., T si ukládá vypočítané regrety do R(s, a). V další iteraci bude zvolená strategie ve stavu s jako: $Pr(s, a) = R(s, a) / \sum_{b \in A} R(s, b)$, kde záporné členy jsou nahrezeny 0, případně pr uniformní strategií.
+
+\subsection{Regret Matching+}
+
+Místo ukládání součtů regretů pomocí Regret Matching, \cref{sub:rm}, je zvolen jiný přístup, tzv. Regret Matching+. Nemá žádné lepší teoretické garance, ale v~praxi může fungovat lépe. Při udržování regretů se pamatuje pouze nezáporná část. Součet regretů pro informační stav $I$ hráče $i$ a možnou akci $a$ v čase $T$ je $Q^T(I, a) = \max(0, Q^{T-1}(I, a) + R_i^T(I, a))$, kde $R_i^T(I, a)$ je regret hráče $i$ za nezahrání akce $a$ v informačním stavu $I$ do času $T$. Volba nové strategie v čase $T+1$ je následující $\pi_i^{T+1}(I, a) = Q^T(I, a)/\sum_{b \in A} Q^T(I, b)$.
+
+\subsubsection{GT-CFR}
+
+Growing-tree CFR je varianta CFR, která postupně zvětšuje prohledávaný strom. Začíná s prvotním stromem obsahujícím aktuální stav a jeho potomky.  
+V každé iteraci probíhají dva kroky: aktualizace regretů a fáze expanze. Aktualizace regretu probíhá jako u klasického CFR, ale pouze na doposud postaveném stromě. Ve fázi expanze se rozšiřuje strom přidáním nových vrcholů do stromu podle trajektorií při simulování her. 
+Na listových vrcholech se na hodnoty hry dotazuje neuronové sítě.
+
+\subsection{Trénování}
+
+Data pro trénování neuronové sítě se sbírají při self-play (jak z trajektorie, tak při prohledávání stromu akcí ve stavu). V trajektorii se procházené dotazy na neuronovou síť ukládají a solver je prozkoumá podrobněji, případně i rekurzivně přidá další dotazy na vyřešení. Z dotazů a jejich řešení se aktualizuje síť. Řešení dotazů je vlastně řešení "podher" - pomocí GT-CFR (díky tomu rekurzivně vytváří další dotazy - pouze s malou pravděpodobností 0.1 nebo 0.2). Zlepšení sítě se propaguje zespod - nejdříve díky "podhrám" těsně nad listy.

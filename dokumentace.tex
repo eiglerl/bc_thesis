@@ -1,0 +1,146 @@
+\chapter{Programátorská
+dokumentace}\label{programuxe1torskuxe1-dokumentace}
+
+\section{Graf}\label{graf}
+
+Třída ``GameGraphScript'' je klíčovým prvkem herního prostředí,
+zajišťujícím řízení interakcí mezi herním grafem a jeho uzly. Zodpovídá
+za generování grafu na základě nových nebo existujících dat, přiřazování
+identifikátorů uzlů, jejich vizuální reprezentaci a generování hran mezi
+nimi. Umožňuje ukládání dat grafu a nabízí funkci hledání nejkratší
+cesty mezi uzly (BFS).
+
+\subsection{Vrchol}\label{vrchol}
+
+Třída ``GameNodeScript'' je klíčovým prvkem herního prostředí,
+zodpovědným za reprezentaci uzlů v herním grafu, jejich vizuální
+zobrazení a interakci. Umožňuje nastavovat ID, pozici, spojené uzly a
+transportní typy, a dále provádět ověřování spojení, manipulovat se
+zvýrazňovačem a volat logiku na základě interakce. Struktura
+``NodeData'' slouží k ukládání informací o uzlech.
+
+\subsection{Hrana}\label{hrana}
+
+Třída ``GameEdgeScript'' pouze drží texturu, kterou LineRenderer
+vykreslí.
+
+\section{Herní logika}\label{hernuxed-logika}
+
+Třída ``GameLogicScript'' představuje jádro herní logiky a spravuje
+průběh hry, interakce mezi hráči a grafem hry. Obsahuje odkazy na různé
+herní komponenty, včetně grafu hry, správce historie Fantoma, ovladače
+kamery, vykreslovače figurek, textu označujícího tah a panelu konce hry.
+Třída řídí hráče a tahy, nastavuje viditelnost hráčů a tokenů,
+implementuje vizuální efekty a animace tahu hráčů, spravuje informace o
+poloze hráčů a tokeny, kontroluje podmínky ukončení hry a zajišťuje
+hladký průběh herní smyčky. Kromě toho obsahuje metody pro správu konce
+hry, zobrazuje konečný panel a ukládá statistiky. Třída také zahrnuje
+utility pro správu cest k souborům.
+
+\section{Config}\label{config}
+
+Struktura ``Config'' zahrnuje několik vnořených struktur pro jednotlivé
+konfigurační sekce. Každá konfigurační sekce obsahuje několik proměnných
+s hodnotami nastavení. Metody BasicConfig, LoadConfig, LoadConfigOrBasic
+a SeeStructure umožňují manipulaci s konfiguracemi.
+
+\section{Logy}\label{logy}
+
+Rozhraní ``IGameLogger'' definuje metody pro logování informací o
+průběhu hry, chybách a dalších událostech.
+
+Třída ``EmptyLogger'' implementuje rozhraní ``IGameLogger'' a všechny
+logy zahazuje, tj. neprovádí žádnou skutečnou operaci.
+
+Třída ``FileLogger'' také implementuje rozhraní ``IGameLogger'' a slouží
+k logování informací do souboru. Konstruktor třídy ``FileLogger''
+inicializuje logovací mechanismus a vytváří soubor, pokud neexistuje.
+Metody LogTurn, LogError a LogInfo slouží k zaznamenávání různých typů
+zpráv do souboru. Metody WriteLine a Write slouží k zápisu zpráv do
+souboru, s ohledem na vláknovou bezpečnost pomocí uzamčení (lock).
+
+\section{Ukládání map}\label{ukluxe1duxe1nuxed-map}
+
+Třída ``MapData'' je odvozena od třídy ScriptableObject a slouží k
+uchování dat mapy. Obsahuje informace o JSON datovém řetězci a zda je
+mapa vybrána.
+
+Struktura ``NodeDataHolder'' obsahuje informace o uzlech na mapě, včetně
+jejich dopravních spojení a pozic.
+
+Struktura ``StringPosition'' slouží k uchování pozice jako řetězce pro
+JSON serializaci.
+
+Struktura ``EnumIntPair'' uchovává páry klíč-hodnota, kde klíč je
+celočíselný identifikátor a hodnota je seznam celočíselných hodnot.
+
+Struktura ``EnumDictionary'' uchovává slovník, který mapuje klíče na
+seznam hodnot.
+
+Třída ``NodeConverter'' obsahuje metody pro konverzi instancí třídy
+GameNodeScript na JSON. Tato třída umožňuje převést uzly mapy a seznam
+uzlů na JSON formát.
+
+\section{Generování map}\label{generovuxe1nuxed-map}
+
+Rozhraní IGraphGenerator definuje metody pro generování uzlů a načítání
+konfigurace.
+
+Třída SimpleGraphGenerator implementuje rozhraní IGraphGenerator a
+provádí generování uzlů a hran v grafu na základě zadané konfigurace.
+Tato třída obsahuje metody pro generování uzlů, včetně zpracování
+existujících uzlů a vytváření hran mezi nimi. Taktéž zde jsou
+implementovány metody pro zpracování konfigurace a vytváření spojení
+mezi uzly.
+
+\section{Hráč}\label{hruxe1ux10d}
+
+\subsection{AI}\label{ai}
+
+Rozhraní ``IFantom'' a ``IDetectives'' slouží jako kontrakty pro hráče
+Fantoma a detektivů. Obě tato rozhraní dědí od základního rozhraní
+``IPlayerBase'', které obsahuje metody pro správu tahů, nastavení
+dostupných transportních tokenů a reakci na tahy protivníka.
+
+\subsection{Reálný hráč}\label{reuxe1lnuxfd-hruxe1ux10d}
+
+Třída ``RealBase'' je abstraktní třídou pro reálné hráče a obsahuje
+logiku pro reakci na kliknutí na herní uzel.
+
+\subsection{Struktura Move}\label{struktura-move}
+
+Struktura ``Move'' reprezentuje tah hráče a obsahuje informace o pozici
+a druhu dopravního prostředku.
+
+\subsection{Hledání hráčů}\label{hleduxe1nuxed-hruxe1ux10dux16f}
+
+Třída ``PlayerFinder'' je utilitní třídou, která umožňuje nalézt typy
+implementující dané rozhraní v určitém assembly. Obsahuje metodu
+``GetTypesWithInterface'', která vrací seznam typů, které implementují
+specifikované rozhraní ``T''. Dále obsahuje metodu
+``GetClassNamesFromTypes'', která z kolekce typů získá seznam názvů
+těchto typů.
+
+Třída ``TypeLoaderExtensions'' obsahuje rozšíření pro načítání typů z
+assembly. Metoda ``GetLoadableTypes'' umožňuje získat načitatelné typy z
+dané assembly a zároveň zachytává výjimky, které mohou nastat během
+načítání typů.
+
+\section{Vykreslování postav}\label{vykreslovuxe1nuxed-postav}
+
+Třída ``FigureRendererScript'' se stará o vykreslování a pohyb herních
+figurek (detektivů a Fantoma). Figurky jsou reprezentovány pomocí
+sprite a barev. Třída obsahuje metody pro inicializaci a přípravu
+figurek, a také pro animovaný pohyb figurek na cílovou pozici.
+
+Dále třída ``ColorUtility'' slouží pro operace spojené s barvami,
+například pro výpočet podobnosti barev a zjišťování, zda je barva příliš
+světlá pro bílý text.
+
+
+\chapter{Uživatelská dokumentace}\label{uux17eivatelskuxe1-dokumentace}
+
+
+
+
+
